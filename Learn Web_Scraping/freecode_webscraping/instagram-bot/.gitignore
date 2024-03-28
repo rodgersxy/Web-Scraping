@@ -1,0 +1,7 @@
+.env
+session.json/
+session.json
+acc.csv/
+acc.csv
+
+venv/
