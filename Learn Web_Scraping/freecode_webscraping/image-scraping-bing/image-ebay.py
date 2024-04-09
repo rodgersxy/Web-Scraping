@@ -1,3 +1,7 @@
+"""
+Scrapes image urls from an eBay search results page, saves them to a CSV file, 
+downloads each image and saves it to a local directory.
+"""
 import hashlib, io, requests, pandas as pd
 from selenium import webdriver
 from selenium.webdriver import ChromeOptions
