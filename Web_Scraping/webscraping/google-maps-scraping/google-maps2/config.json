@@ -1,0 +1,5 @@
+{
+    "categories": ["restaurants"],
+    "target_locations": ["Nairobi, Mombasa"],
+    "csv_filename": "places_data.csv"
+  }

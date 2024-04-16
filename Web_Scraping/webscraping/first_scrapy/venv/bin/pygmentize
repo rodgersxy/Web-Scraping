@@ -1,0 +1,10 @@
+#!/bin/sh
+'''exec' "/home/rodgers/Desktop/Learn Web_Scraping/freecode_webscraping/first_scrapy/venv/bin/python3" "$0" "$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+from pygments.cmdline import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())

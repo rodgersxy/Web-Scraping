@@ -1,0 +1,4 @@
+from .scrap_avisverifies import scrap_reviews_avisverifies
+from .scrap_trustpilot import scrap_reviews_trustpilot
+from .scrap_trustedshops import scrap_reviews_trustedshops, TrustedshopsScraper
+from .scrap_igraal import scrap_reviews_igraal, IGraalScraper
