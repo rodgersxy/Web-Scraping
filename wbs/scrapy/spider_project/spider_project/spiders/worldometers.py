@@ -1,7 +1,7 @@
 import scrapy
 import random
 import time
-import csv
+import json
 
 class WorldometersSpider(scrapy.Spider):
     name = "worldometers"
@@ -17,9 +17,7 @@ class WorldometersSpider(scrapy.Spider):
     ]
 
     def __init__(self):
-        self.csv_file = open('countries.csv', 'w', newline='', encoding='utf-8')
-        self.csv_writer = csv.writer(self.csv_file)
-        self.csv_writer.writerow(['Country Name', 'Country Link'])
+        self.data = []
 
     def start_requests(self):
         for url in self.start_urls:
@@ -39,7 +37,28 @@ class WorldometersSpider(scrapy.Spider):
         for country in countries:
             country_name = country.xpath(".//text()").get()
             country_link = country.xpath(".//@href").get()
-            self.csv_writer.writerow([country_name, country_link])
+            country_data = {
+                'country_name': country_name,
+                'country_link': country_link,
+                'population_data': []
+            }
+            self.data.append(country_data)
+
+            # Follow the link to the individual country page
+            country_url = response.urljoin(country_link)
+            yield scrapy.Request(url=country_url, callback=self.parse_country, meta={'country_data': country_data}, headers={'User-Agent': random.choice(self.user_agent_list)})
+
+    def parse_country(self, response):
+        country_data = response.meta['country_data']
+        rows = response.xpath("(//table[contains(@class,'table')])[1]/tbody/tr")
+        for row in rows:
+            year = row.xpath(".//td[1]/text()").get()
+            population = row.xpath(".//td[2]/strong/text()").get()
+            country_data['population_data'].append({
+                'year': year,
+                'population': population
+            })
 
     def closed(self, reason):
-        self.csv_file.close()
+        with open('countries.json', 'w', encoding='utf-8') as f:
+            json.dump(self.data, f, ensure_ascii=False, indent=4)
