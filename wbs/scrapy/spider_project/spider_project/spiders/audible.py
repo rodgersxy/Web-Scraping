@@ -18,7 +18,16 @@ class AudibleSpider(scrapy.Spider):
                 'length': book_length,
             }
 
-        # Follow pagination links
-        next_page = response.xpath('//a[contains(@class, "next-link")]/@href').get()
-        if next_page:
-            yield Request(response.urljoin(next_page), callback=self.parse)
+        # Follow pagination buttons
+        pagination = response.xpath('//ul[contains(@class, "pagingElements")]')
+        
+        next_page_url = pagination.xpath('.//span[contains(@class, "nextButton")]/a/@href').get()
+
+        if next_page_url:
+            yield response.follow(url=next_page_url, callback=self.parse)
+
+
+        # if pagination:
+        #     yield Request(response.urljoin(pagination), callback=self.parse)
+
+        # Follow the next page button
