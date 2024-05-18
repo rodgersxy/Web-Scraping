@@ -17,9 +17,11 @@ class TranscriptsSpider(CrawlSpider):
 
     def parse_item(self, response):
         article = response.xpath("//article[@class='main-article']")
+        transcript_list = article.xpath("/div[@class='full-script']/text()").getall()
+        transcript_string = ' '.join(transcript_list)
         yield {
             'title': article.xpath("./h1/text()").get(),
             'plot': article.xpath("./p/text()").get(),
-            'transcript': article.xpath("/div[@class='full-script']/text()").getall(),
+            'transcript': transcript_string,
             'url': response.url,
         }
